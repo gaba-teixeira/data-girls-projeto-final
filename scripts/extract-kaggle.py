@@ -2,11 +2,9 @@ import os
 import logging
 import kagglehub
 
-# ==========================================
-# 1. Configuração Profissional de Logs
-# ==========================================
+
 logging.basicConfig(
-    level=logging.INFO
+    level=logging.INFO, format='%(asctime)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
@@ -14,11 +12,9 @@ logger = logging.getLogger(__name__)
 DATASET_NAME = 'parisrohan/credit-score-classification'
 
 # Pasta onde os dados serão salvos localmente
-PASTA_DESTINO = '../dados_brutos'
+PASTA_DESTINO = '../camada_bronze'
 
-# ==========================================
-# 3. Função de Extração
-# ==========================================
+
 def extrair_dados():
     logger.info(f"Iniciando a extração do dataset: '{DATASET_NAME}'...")
     
@@ -35,7 +31,7 @@ def extrair_dados():
             caminho_destino = os.path.join(PASTA_DESTINO, nome_arquivo)
             
             if os.path.isfile(caminho_origem):
-                # Usando o os.replace para mover o arquivo limpo
+                # Usando o os.replace para mover o arquivo 
                 os.replace(caminho_origem, caminho_destino)
                 logger.info(f"Arquivo movido com sucesso: {nome_arquivo}")
                 arquivos_movidos += 1
