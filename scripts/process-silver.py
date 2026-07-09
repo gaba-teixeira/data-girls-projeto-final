@@ -36,6 +36,9 @@ def processar_camada_prata():
         # Limpeza global de vazios no DataFrame
         df = df.replace(r'^\s*$', np.nan, regex=True)
 
+        # Retirando registros duplicados
+        df = df.drop_duplicates(subset=['Customer_ID', 'Month'])
+
         #Tratando nomes vazios
         df['Name'] = df['Name'].fillna(
             df.groupby('Customer_ID')['Name'].transform('first')
@@ -50,13 +53,22 @@ def processar_camada_prata():
         df['Occupation'] = df['Occupation'].fillna(
             df.groupby('Customer_ID')['Occupation'].transform('first')
         )
+         #Tratando type of loan vazios
+        df['Type_of_Loan'] = df['Type_of_Loan'].fillna(
+            df.groupby('Customer_ID')['Type_of_Loan'].transform('first')
+        )
+        # Tratando Num_of_Delayed_Payment vazios
+        df['Num_of_Delayed_Payment'] = df['Num_of_Delayed_Payment'].fillna(0)
 
-        # Retirando registros duplicados
-        df = df.drop_duplicates(subset=['Customer_ID', 'Month'])
+        #  Tratando tudo que for menor que 0 por NaN 
+        df.loc[df['Num_Bank_Accounts'] < 0, 'Num_Bank_Accounts'] = np.nan
 
+         # Tratando Amount_invested_monthly 
+        df['Amount_invested_monthly'] = df['Amount_invested_monthly'].fillna(0)
+        df['Amount_invested_monthly'] = df['Amount_invested_monthly'].replace(' __10000__ ', '10000')
 
         # Garantindo tipos numéricos (limpando caracteres estranhos se necessário)
-        cols_numericas = ['Age', 'Annual_Income', 'Monthly_Inhand_Salary', 'Outstanding_Debt', 'Total_EMI_per_month','Amount_invested_monthly','Num_of_Delayed_Payment','Changed_Credit_Limit', 'Num_Bank_Accounts','Num_Credit_Card','Interest_Rate','Num_of_Loan']
+        cols_numericas = ['Age', 'Annual_Income', 'Monthly_Inhand_Salary', 'Outstanding_Debt', 'Total_EMI_per_month','Amount_invested_monthly','Num_of_Delayed_Payment','Changed_Credit_Limit', 'Num_Bank_Accounts','Num_Credit_Card','Interest_Rate','Num_of_Loan', 'Delay_from_due_date','Num_Credit_Inquiries', 'Monthly_Balance' ]
         for col in cols_numericas:
             df[col] = pd.to_numeric(df[col], errors='coerce')
 

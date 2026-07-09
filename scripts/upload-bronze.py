@@ -2,12 +2,13 @@ import os
 import boto3
 import logging
 from dotenv import load_dotenv
+from botocore.exceptions import ClientError, NoCredentialsError
 
 # Carrega as variáveis do arquivo .env
 load_dotenv()
 
 # Configuração de logs
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Inicializa o cliente do S3
@@ -22,18 +23,31 @@ BUCKET_NAME = os.getenv('BUCKET_NAME')
 PASTA_ORIGEM = '../camada_bronze'
 
 def upload_bronze_s3():
-    for arquivo in os.listdir(PASTA_ORIGEM):
-        if arquivo.endswith('.csv'):
-            # Define o arquivo a ser enviado
-            caminho_local = os.path.join(PASTA_ORIGEM, arquivo)
-            # Define o caminho no S3
-            caminho_s3 = f"bronze/{arquivo}"
-            
-            logger.info(f"Copiando {arquivo} para o S3...")
+    try:
+        # Verifica se o diretório existe antes de tentar listar
+        if not os.path.exists(PASTA_ORIGEM):
+            logger.error(f"Diretório não encontrado: {PASTA_ORIGEM}")
+            return
 
-            s3_client.upload_file(caminho_local, BUCKET_NAME, caminho_s3)
-            logger.info("Upload concluído!")
+        for arquivo in os.listdir(PASTA_ORIGEM):
+            if arquivo.endswith('.csv'):
+                caminho_local = os.path.join(PASTA_ORIGEM, arquivo)
+                caminho_s3 = f"bronze/{arquivo}"
+                
+                try:
+                    logger.info(f"Copiando {arquivo} para o S3...")
+                    s3_client.upload_file(caminho_local, BUCKET_NAME, caminho_s3)
+                    logger.info(f"Upload de {arquivo} concluído com sucesso!")
+                
+                except ClientError as e:
+                    logger.error(f"Erro ao enviar {arquivo} para o S3: {e}")
+                except NoCredentialsError:
+                    logger.error("Credenciais AWS não encontradas.")
+                except Exception as e:
+                    logger.error(f"Erro inesperado ao processar {arquivo}: {e}")
+                    
+    except Exception as e:
+        logger.error(f"Erro crítico na execução do script: {e}")
 
 if __name__ == "__main__":
     upload_bronze_s3()
-
