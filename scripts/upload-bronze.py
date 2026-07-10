@@ -3,12 +3,15 @@ import boto3
 import logging
 from dotenv import load_dotenv
 from botocore.exceptions import ClientError, NoCredentialsError
+from pathlib import Path
+
+
 
 # Carrega as variáveis do arquivo .env
 load_dotenv()
 
 # Configuração de logs
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 # Inicializa o cliente do S3
@@ -20,7 +23,9 @@ s3_client = boto3.client(
 )
 
 BUCKET_NAME = os.getenv('BUCKET_NAME')
-PASTA_ORIGEM = '../camada_bronze'
+# Caminho absoluto da pasta onde este script está localizado
+BASE_DIR = Path(__file__).resolve().parent.parent  # sobe de /scripts para a raiz do projeto
+PASTA_ORIGEM = BASE_DIR / "camada_bronze"
 
 def upload_bronze_s3():
     try:

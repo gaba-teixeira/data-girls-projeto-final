@@ -1,0 +1,13 @@
+
+pandas==2.2.2              # Biblioteca principal para limpeza e transformação dos dados (Camada Prata)
+pyarrow==16.1.0            # Motor necessário para ler e salvar arquivos no formato Parquet
+numpy
+duckdb==1.0.0              # Banco de dados analítico em memória para rodar queries SQL na Camada Ouro
+
+
+boto3==1.34.144    
+botocore.exceptions        # SDK oficial da AWS para conexão e autenticação com os serviços da nuvem
+awswrangler==3.9.0         # Extensão essencial que salva DataFrames do Pandas direto no S3 em formato Parquet
+
+kagglehub    # API oficial para fazer o download automático dos datasets do Kaggle
+python-dotenv # Biblioteca que faz a leitura das variaveis de ambiente
