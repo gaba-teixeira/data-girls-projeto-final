@@ -47,3 +47,4 @@ with DAG(
 
     # 4. Definição do fluxo de dependências (Pipeline)
     task_extract_kaggle >> task_upload_bronze >> task_process_silver >> task_process_gold
+    
