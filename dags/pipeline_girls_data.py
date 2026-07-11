@@ -9,8 +9,8 @@ default_args = {
     'start_date': datetime(2026, 1, 1), 
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 1,                        # Se falhar, tenta mais 1 vez automaticamente
-    'retry_delay': timedelta(minutes=2), # Espera 2 minutos antes de tentar de novo
+    'retries': 1,                        
+    'retry_delay': timedelta(minutes=2), 
 }
 
 # 2. Instanciação da DAG
@@ -18,9 +18,9 @@ with DAG(
     dag_id='pipeline_projeto_final',
     default_args=default_args,
     description='Pipeline de ETL que extrai dados do Kaggle e processa nas camadas Bronze, Silver e Gold no S3.',
-    schedule_interval='@hourly',             # Execução manual por enquanto (None)
-    catchup=False,                      # Evita que o Airflow tente rodar retroativamente o passado
-    tags=['kaggle', 's3', 'gold'],      # Tags ajudam a organizar na UI do Airflow
+    schedule_interval='@hourly',             
+    catchup=False,                      
+    tags=['kaggle', 's3', 'gold'],      
 ) as dag:
 
     # 3. Definição das Tasks (Tarefas)
