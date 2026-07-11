@@ -111,11 +111,70 @@ https://github.com/user-attachments/assets/4752410f-e595-4747-8acc-b306811b089e
 
 ## 📊 Camada de Visualização (Power BI)
 
-O painel gerencial consome diretamente as tabelas dimensionais otimizadas da camada Gold no S3. O relatório foi construído com foco na experiência do usuário (UX) e na velocidade de resposta para responder a perguntas estratégicas sobre o perfil de crédito dos clientes.
+### 🔌 Conexão de Dados e Ingestão (Power Query / M)
+ 
+Para conectar o Power BI diretamente à camada Gold do Data Lake, utilizamos o motor do Power Query para disparar a execução de um script Python nativo. Essa abordagem elimina a necessidade de expor chaves de acesso no código, buscando as credenciais diretamente do sistema operacional.
+ 
+```python
+Fonte = Python.Execute("
+import os
+import pandas as pd
+import awswrangler as wr
+ 
 
-*(DICA: Adicione os prints ou o GIF do seu dashboard interativo bem aqui!)*
+os.environ['AWS_DEFAULT_REGION'] = 'us-east-2'
+ 
+
+BUCKET = ""projeto-datagirls-gabateixeira""
+ 
+
+dim_bancarizacao = wr.s3.read_parquet(f""s3://{BUCKET}/ouro/dim_bancarizacao/dim_bancarizacao.parquet"")
+dim_cliente = wr.s3.read_parquet(f""s3://{BUCKET}/ouro/dim_cliente/dim_cliente.parquet"")
+dim_perfil_credito = wr.s3.read_parquet(f""s3://{BUCKET}/ouro/dim_perfil_credito/dim_perfil_credito.parquet"")
+fato_historico_credito = wr.s3.read_parquet(f""s3://{BUCKET}/ouro/fato_historico_credito/fato_historico_credito.parquet"")
+"
+```
+ 
+A conexão utiliza variáveis de ambiente do sistema (`os.environ`) para gerenciar as credenciais da AWS.
+ 
+
+**Processamento:** Os dados chegam ao Power BI prontos para análise (modelo Star Schema), garantindo alta performance na carga dos visuais.
+ 
+---
+ 
+### 📈 Indicadores e Análises do Dashboard
+ 
+O dashboard foi desenhado com foco em UX (Experiência do Usuário), facilitando a tomada de decisão através de métricas chave de performance (KPIs) e análises de tendência.
+ 
+#### KPIs Principais
+ 
+| Indicador |
+|---|
+| Total de Clientes Cadastrados |
+| Dívida total em aberto | 
+| Total de Empréstimos | 
+| Ticket Médio de EMI | 
+| Variação da Dívida (MoM) |   
+ 
+#### Principais Visões Analíticas
+ 
+| Visual | O que ele explica |
+|---|---|
+| Distribuição de Credit Score | Identifica a saúde da carteira (Good, Standard, Poor, Not Analyzed). |
+| Renda Mensal vs. Categoria | Cruza o poder aquisitivo do cliente com seu nível de risco (Score). |
+| Pagamentos Atrasados | Analisa a inadimplência binária (Yes/No), focando em clientes com atrasos. |
+| Tendência Temporal | Gráficos de linha acompanhando a evolução mensal do "Atraso Médio" e "Volume de Empréstimos". |
+ 
+<img width="990" height="547" alt="image" src="https://github.com/user-attachments/assets/b0649838-d740-4e7b-8af6-b20a1883c439" />
 
 ---
+ 
+### 📂 Acessar ao BI
+ 
+O arquivo principal do projeto está disponível neste repositório para consulta e estudo:
+ 
+- **Arquivo:** `Projeto final data girls.pbix`
+- **Pré-requisitos:** Para rodar o relatório localmente, certifique-se de configurar as variáveis de ambiente com suas credenciais AWS seguindo o padrão definido nos scripts de Python.
 
 ## 🚀 Como Executar este Projeto
 
