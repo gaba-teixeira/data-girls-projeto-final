@@ -2,7 +2,7 @@
 # 📊 End-to-End Data Pipeline: Credit Score Classification
 ### Projeto Final — Bootcamp Data Girls (Trilha de Engenharia de Dados)
 
-Este repositório apresenta o projeto prático final desenvolvido para a conclusão do Bootcamp **Data Girls** na trilha de **Engenharia de Dados**. O objetivo principal foi construir um pipeline robusto, automatizado e orquestrado para a extração, tratamento, modelagem e visualização de dados de concessão de crédito. 
+Este repositório apresenta o projeto prático final desenvolvido para a conclusão do Bootcamp **Data Girls** na trilha de **Engenharia de Dados**. O objetivo principal foi construir um pipeline robusto, automatizado e orquestrado para a extração, tratamento, modelagem e visualização de dados de Classificação de Crédito. 
 
 O projeto adota a **Arquitetura Medalhão (Bronze, Silver e Gold)** com persistência em nuvem e utiliza o **Apache Airflow** rodando em **Docker** como orquestrador central.
 
